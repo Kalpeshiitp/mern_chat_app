@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../model/userModel");
 const generateToken = require("../config/generateToken");
+const { search } = require("../routes/userRoutes");
 
 const registerUser = asyncHandler(async (req, res) => {
     try {
@@ -42,8 +43,6 @@ const registerUser = asyncHandler(async (req, res) => {
     }
   });
   
-
-
 const authUser =  asyncHandler(async (req,res) =>{
     try{
  const {email,password} = req.body;
@@ -71,17 +70,19 @@ const authUser =  asyncHandler(async (req,res) =>{
     }
 })
 
-const allUsers = asyncHandler(async(req,res)=>{
-  const keyword = req.query.search
-  ?{
- $or:[
-  {name:{$regex: req.query.search , $option:'i'}},
-  {email:{$regex: req.query.search , $option:'i'}}
- ]
-  }:{}
-  const users=  await User.find(keyword).find({_id:{$ne:req.user._id}})
-  res.send(users)
-})
+const allUsers = asyncHandler(async (req, res) => {
+  const keyword = req.query.search;
+  console.log('keyword>>', keyword);
+
+  const users = await User.find({
+    $or: [
+      { name: { $regex: keyword, $options: 'i' } },
+      { email: { $regex: keyword, $options: 'i' } }
+    ],
+  }).find({ _id: { $ne: req.user._id } });
+
+  res.send(users);
+});
 
 module.exports ={
     registerUser,

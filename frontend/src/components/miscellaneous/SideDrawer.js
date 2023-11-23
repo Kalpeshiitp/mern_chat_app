@@ -9,6 +9,8 @@ import {
   MenuItem,
   MenuDivider,
 } from "@chakra-ui/react";
+import axios from "axios";
+import { Spinner } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Input } from "@chakra-ui/input";
 import { useToast } from "@chakra-ui/toast";
@@ -26,6 +28,7 @@ import { ChatState } from "../../context/ChatProvider";
 import ProfileModal from "./ProfileModal";
 import { useHistory } from "react-router-dom";
 import ChatLoading from "../ChatLoading";
+import UserListItem from "../UserAvatar/UserListItem";
 
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
@@ -33,8 +36,7 @@ const SideDrawer = () => {
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
 
-
-  const { user } = ChatState();
+  const { user, setSelectedChat, chats, setChats } = ChatState();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
@@ -43,9 +45,33 @@ const SideDrawer = () => {
     history.push("/");
   };
 
-  const accessChat = (userId)=>{
-
-  }
+  const accessChat = async (userId) => {
+    try {
+      setLoadingChat(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      // const { data } = await axios.get("/api/chat", { userId }, config);
+      const { data } = await axios.get(`/api/chat?userId=${userId}`, config);
+      console.log('access chat data>>',data);
+      if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
+      setLoadingChat(false);
+      setSelectedChat(data);
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Error fetching the chat",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-left",
+      });
+    }
+  };
 
   const handleSearch = async () => {
     if (!search) {
@@ -69,7 +95,7 @@ const SideDrawer = () => {
       };
 
       const { data } = await axios.get(`/api/user?search=${search}`, config);
-
+      console.log("data>>>", data);
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
@@ -83,8 +109,6 @@ const SideDrawer = () => {
       });
     }
   };
-
-
   return (
     <>
       <Box
@@ -133,7 +157,6 @@ const SideDrawer = () => {
         </div>
       </Box>
 
-      
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
