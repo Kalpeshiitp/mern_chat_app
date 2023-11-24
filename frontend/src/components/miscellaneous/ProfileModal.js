@@ -1,18 +1,74 @@
-import React from 'react'
+import React from "react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  IconButton,
+  Text,
+  Image,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { ViewIcon } from "@chakra-ui/icons";
-import {useDisclosure, IconButton} from "@chakra-ui/react";
 
-const ProfileModal = ({user,children}) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+const ProfileModal = ({ user, children }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <>
-    {children ? (
+      {children ? (
         <span onClick={onOpen}>{children}</span>
       ) : (
         <IconButton d={{ base: "flex" }} icon={<ViewIcon />} onClick={onOpen} />
       )}
-    </>
-  )
-}
 
-export default ProfileModal
+      <Modal size="lg" onClose={onClose} isOpen={isOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent h="410px">
+          <ModalHeader
+            fontSize="40px"
+            fontFamily="Work sans"
+            display="flex"
+            justifyContent="center"
+          >
+            {/* Add a check for user existence */}
+            {user ? user.name : "User Not Available"}
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody
+            display="flex"
+            flexDir="column"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            {user && (
+              <>
+                <Image
+                  borderRadius="full"
+                  boxSize="150px"
+                  src={user.pic}
+                  alt={user.name}
+                />
+                <Text
+                  fontSize={{ base: "28px", md: "30px" }}
+                  fontFamily="Work sans"
+                >
+                  Email: {user.email}
+                </Text>
+              </>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose}>Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
+
+export default ProfileModal;

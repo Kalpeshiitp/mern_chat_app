@@ -7,7 +7,7 @@ import { AddIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/react";
 import { getSender } from '../config/ChatLogics';
 import GroupChatModal from './miscellaneous/GroupChatModal';
-const MyChat = () => {
+const MyChat = (fetchAgain) => {
   const [loggedUser, setLoggedUser] = useState();
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
   const toast = useToast();
@@ -44,7 +44,7 @@ const MyChat = () => {
     flexDir="column"
     alignItems="center"
     p={3}
-    bg="white"
+    background="white"
     w={{ base: "100%", md: "31%" }}
     borderRadius="lg"
     borderWidth="1px"
@@ -75,7 +75,7 @@ const MyChat = () => {
       display="flex"
       flexDir="column"
       p={3}
-      bg="#F8F8F8"
+      background="#F8F8F8"
       w="100%"
       h="100%"
       borderRadius="lg"
@@ -87,7 +87,7 @@ const MyChat = () => {
             <Box
               onClick={() => setSelectedChat(chat)}
               cursor="pointer"
-              bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
+              background={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
               color={selectedChat === chat ? "white" : "black"}
               px={3}
               py={2}
