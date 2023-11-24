@@ -72,3 +72,4 @@ const ProfileModal = ({ user, children }) => {
 };
 
 export default ProfileModal;
+
