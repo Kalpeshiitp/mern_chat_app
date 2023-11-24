@@ -54,9 +54,8 @@ const SideDrawer = () => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      // const { data } = await axios.get("/api/chat", { userId }, config);
       const { data } = await axios.get(`/api/chat?userId=${userId}`, config);
-      console.log('access chat data>>',data);
+      console.log("access chat data>>", data);
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
       setLoadingChat(false);
       setSelectedChat(data);
@@ -156,7 +155,6 @@ const SideDrawer = () => {
           </Menu>
         </div>
       </Box>
-
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
@@ -189,5 +187,4 @@ const SideDrawer = () => {
     </>
   );
 };
-
 export default SideDrawer;
