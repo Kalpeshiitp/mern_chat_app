@@ -4,7 +4,7 @@ const Chat = require("../model/chatModel");
 const User = require("../model/userModel");
 
 const accessChat = asyncHandler(async (req, res) => {
-  const { userId } = req.query;
+  const { userId } = req.body;
 
   if (!userId) {
     console.log("UserId param not sent with request");
