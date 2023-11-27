@@ -12,13 +12,14 @@ import "./style.css";
 import ScrollChat from "./ScrollChat";
 import io from "socket.io-client";
 
-const ENDPOINT = "http://localhost:3000"
+const ENDPOINT = "http://localhost:5000"
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState();
+  const [socketConnected, setSocketConnected] = useState(false);
 
   const { user, selectedChat, setSelectedChat } = ChatState();
 
@@ -65,6 +66,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setMessages(data);
       console.log(messages)
       setLoading(false);
+      socket.emit('join chat', selectedChat._id)
     } catch (error) {
       console.log(error);
       // toast({
@@ -83,6 +85,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   useEffect(() => {
     socket = io(ENDPOINT);
+    socket.emit("setup", user);
+    socket.on("connected", () => setSocketConnected(true));
   }, []);
 
   const typingHandler = (e) => {
