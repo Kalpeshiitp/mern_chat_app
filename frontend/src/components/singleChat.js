@@ -10,6 +10,10 @@ import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import axios from "axios";
 import "./style.css";
 import ScrollChat from "./ScrollChat";
+import io from "socket.io-client";
+
+const ENDPOINT = "http://localhost:3000"
+var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
@@ -76,6 +80,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   useEffect(() => {
     fetchMessages();
   }, [selectedChat]);
+
+  useEffect(() => {
+    socket = io(ENDPOINT);
+  }, []);
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
